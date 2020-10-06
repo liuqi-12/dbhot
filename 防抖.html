@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="../www/myTool.js"></script> -->
+    <script>
+        window.onload = function () {
+            function doSomething(e) {
+                console.log(e)
+                counter += 1
+                box.innerHTML = counter
+            }
+
+            function debounce(func, wait, immediate) {
+                let timer = null;
+                let handFun = function (...agr) {
+                    // console.log(this)
+                    // console.log(...agr)
+                    if (timer) {
+                        clearTimeout(timer)
+                    }
+                    if (immediate) {
+                        let callNow = !timer
+                        timer = setTimeout(() => {
+                            timer = null
+                        }, wait)
+                        if (callNow) {
+                            // console.log(this)
+                            func(...agr)
+                        }
+
+                    } else {
+                        timer = setTimeout(() => {
+                            // console.log(this)
+                            func(...agr)
+                        }, wait)
+                    }
+
+                }
+                handFun.cancel = function () {
+                    clearTimeout(timer)
+                }
+                return handFun
+            }
+
+            const box = document.getElementById("div1")
+            const btn = document.getElementById('btn')
+            let counter = 0;
+            box.innerHTML = counter
+            var debounced = debounce(doSomething, 300,true)
+            box.onmousemove = debounced
+
+            btn.onclick = function () {
+                // console.log(debounced)
+                debounced.cancel()
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="div1" style="width: 300px; height:300px; border: 1px solid red;"></div>
+    <button id="btn">取消防抖</button>
+</body>
+
+</html>

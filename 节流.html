@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="../www/myTool.js"></script> -->
+    <script>
+        window.onload = function () {
+            function doSomething(e) {
+                console.log(e)
+                counter += 1
+                box.innerHTML = counter
+            }
+            //顾头不顾尾
+            // function throttle(func, wait) {
+            //     var old = 0;
+            //     return function (...agr) {
+            //         var now = Date.now()
+            //         if (now - old >= wait) {
+            //             console.log(this)
+            //             func(...agr)
+            //             old = now
+            //         }
+            //     }
+            // }
+
+            //顾尾不顾头
+            // function throttle(func,wait) {
+            //     let timer
+            //     return function(...agr) {
+            //         if(!timer) {
+            //             timer = setTimeout(() => {
+            //                 timer = null
+            //                 func(...agr)
+            //             },wait)
+            //         }
+            //     }
+            // }
+
+            function throttle(func, wait) {
+                let timer
+                var old = 0;
+                return function (...agr) {
+                    var now = Date.now()
+                    if (now - old >= wait) {
+                        if(timer) {
+                            clearTimeout(timer)
+                            timer = null
+                        }
+                        console.log(this)
+                        func(...agr)
+                        old = now
+                    }else if (!timer) {
+                        timer = setTimeout(() => {
+                            timer = null
+                            old = Date.now()
+                            func(...agr)
+                        }, wait)
+                    }
+                }
+            }
+
+
+
+
+            const box = document.getElementById("div1")
+            const btn = document.getElementById('btn')
+            let counter = 0;
+            box.innerHTML = counter
+
+            box.onmousemove = throttle(doSomething, 2000)
+
+        }
+    </script>
+</head>
+
+<body>
+    <div id="div1" style="width: 300px; height:300px; border: 1px solid red;"></div>
+    <button id="btn">取消防抖</button>
+</body>
+
+</html>
